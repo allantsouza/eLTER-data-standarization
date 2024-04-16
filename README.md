@@ -11,3 +11,7 @@ To map the terms currently in use in eLTER, compare it with terms used in standa
 
 ## Status
 In development.
+
+## Potentially useful R packages
+ - https://github.com/ropensci/EML
+ - https://github.com/ropensci/dwctaxon
