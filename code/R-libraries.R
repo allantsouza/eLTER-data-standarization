@@ -1,5 +1,10 @@
 # libraries
-library(tidyverse)
-library(janitor)
-library(here)
-library(renv)
+library(pacman)
+pacman::p_load("tidyverse",
+               "janitor",
+               "here",
+               "renv",
+               "httr",
+               "jsonlite",
+               "rdflib",
+               "tictoc")
