@@ -23,6 +23,17 @@ In development.
 ## License 
 This project is licensed under the [EUPL License](https://eupl.eu/) - see the [LICENSE](LICENSE) file for details.
 
-## Potentially useful R packages
+
+## Potentially useful resources
  - https://github.com/ropensci/EML
  - https://github.com/ropensci/dwctaxon
+
+## Acknowledgments
+
+This project has received funding from the European Union's Horizon 2020 Research and Innovation Programme under grant agreement No 871128 [(eLTER PLUS)](https://elter-ri.eu/elter-plus).
+
+<p align="center">
+  <a href="https://elter-ri.eu/elter-plus">
+    <img src="assets/eLTER-IMAGE-PLUS_logo-v01.svg" width="175" height="auto"/>
+  </a>
+</p>
