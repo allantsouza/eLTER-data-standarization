@@ -1,6 +1,7 @@
 # libraries
 library(pacman)
 pacman::p_load("tidyverse",
+               "readxl",
                "janitor",
                "here",
                "renv",
