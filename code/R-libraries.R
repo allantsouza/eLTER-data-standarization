@@ -7,4 +7,5 @@ pacman::p_load("tidyverse",
                "httr",
                "jsonlite",
                "rdflib",
-               "tictoc")
+               "tictoc",
+               "arrow")
