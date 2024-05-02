@@ -9,4 +9,6 @@ pacman::p_load("tidyverse",
                "jsonlite",
                "rdflib",
                "tictoc",
-               "arrow")
+               "arrow",
+               "textTinyR", 
+               "data.table")
