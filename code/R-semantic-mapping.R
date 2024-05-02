@@ -77,14 +77,14 @@ matching_terms <- function(terms_vector, target_term) {
 }
 
 # testing the function ----
-## loading the list of terms from EnvThes 
-envthes_data <- read_parquet(file = here("data", "data-outputs", "envthes_data.parquet"))
-
-### selecting only the column with the terms definitions
-candidate_terms <- envthes_data %>% 
-  # can be done by definition or by prefLabel (here is done with the term definition)
-  distinct(definition) %>% 
-  pull(definition) 
+# ## loading the list of terms from EnvThes 
+# envthes_data <- read_parquet(file = here("data", "data-outputs", "envthes_data.parquet"))
+# 
+# ### selecting only the column with the terms definitions
+# candidate_terms <- envthes_data %>% 
+#   # can be done by definition or by prefLabel (here is done with the term definition)
+#   distinct(definition) %>% 
+#   pull(definition) 
 
 ## testing the function ----
 # ### it will provide the list of the top 5 terms with higher similarity
