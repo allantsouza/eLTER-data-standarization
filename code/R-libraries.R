@@ -11,4 +11,5 @@ pacman::p_load("tidyverse",
                "tictoc",
                "arrow",
                "textTinyR", 
-               "data.table")
+               "data.table",
+               "xlsx")
