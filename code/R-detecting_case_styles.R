@@ -61,4 +61,5 @@ elter_template %>%
   coord_flip() +
   geom_col(fill = "orange", col = "black") +
   labs(x = "Case style", y = "Number of variables") +
-  theme_bw()
+  theme_bw() +
+  theme(text = element_text(size = 18))
