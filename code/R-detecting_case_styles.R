@@ -1,8 +1,5 @@
 source(file = here::here("code", "R-libraries.R"))
 
-library(stringr)
-library(dplyr)
-
 # Updated function to detect naming style
 # Function to detect naming style
 detect_case_style <- function(input_strings) {
@@ -36,7 +33,6 @@ detect_case_style <- function(input_strings) {
   )
 }
 
-
 # applying on eLTER data template
 elter_template <- read_excel(here("data", "eLTER_DS_complete.xlsx"))
 
@@ -63,3 +59,56 @@ elter_template %>%
   labs(x = "Case style", y = "Number of variables") +
   theme_bw() +
   theme(text = element_text(size = 18))
+
+# standardizing case style ----
+## custom function
+convert_case_style <- function(input_string, target_case) {
+  # Helper function to split a string into words
+  split_to_words <- function(string) {
+    str_split(string, "[-_\\s]+|(?<=[a-z])(?=[A-Z])")[[1]]
+  }
+  # Convert the first letter of each word to uppercase
+  capitalize <- function(string) {
+    str_to_title(string)
+  }
+  # Process each input string individually
+  result <- map_chr(input_string, function(str) {
+    # Split the string into words
+    words <- split_to_words(str)
+    # Convert to the target case style
+    converted <- switch(
+      target_case,
+      "snake case" = tolower(paste(words, collapse = "_")),
+      "camel case" = {
+        first_word <- tolower(words[1])
+        other_words <- paste(capitalize(words[-1]), collapse = "")
+        paste0(first_word, other_words)
+      },
+      "pascal case" = paste(capitalize(words), collapse = ""),
+      "kebab case" = tolower(paste(words, collapse = "-")),
+      "flat case" = tolower(paste(words, collapse = "")),
+      "upper flat case" = toupper(paste(words, collapse = "")),
+      "pascal snake case" = paste(capitalize(words), collapse = "_"),
+      "camel snake case" = {
+        first_word <- tolower(words[1])
+        other_words <- paste(capitalize(words[-1]), collapse = "_")
+        paste0(first_word, other_words)
+      },
+      "screaming snake case" = toupper(paste(words, collapse = "_")),
+      "train case" = paste(capitalize(words), collapse = "-"),
+      "cobol case" = paste(toupper(words), collapse = "-"),
+      NA_character_  # Return NA for any unrecognized case style
+    )
+    converted
+  })
+  
+  return(result)
+}
+
+# converting eLTER data template to camel case style
+## TODO save the converted dataset into the data-outputs
+elter_template %>% 
+  mutate(term = convert_case_style(input_string = `Field Name`, target_case = "camel case")) %>% 
+  relocate(term, .after = `Field Name`) %>% 
+  mutate(table = convert_case_style(input_string = Table, target_case = "camel case")) %>%
+  relocate(table, .after = Table)
