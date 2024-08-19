@@ -9,12 +9,12 @@ curated_sv <- read_excel(here("data", "eLTER-DATA-semantic_matching_to_dwc_curat
 curated_sv %>% 
   clean_names() %>% 
   dplyr::select(-x1) %>% 
-  filter(elter_term == "MIN_LEVEL") %>% 
+  filter(elter_term == "YEAR") %>% 
   slice(1) %>%
   pull(elter_definition)
 
 # data curation ----  
-curated_sv %>% 
+curated_mapping <- curated_sv %>% 
   clean_names() %>%
   dplyr::select(-x1) %>% 
   distinct(elter_term, elter_definition) %>% 
@@ -252,10 +252,245 @@ curated_sv %>%
   mutate(dwc_mapping = replace(dwc_mapping, elter_term == "MIN_LEVEL", "minimumDistanceAboveSurfaceInMeters")) %>% 
   mutate(dwc_best_match = replace(dwc_best_match, elter_term == "MIN_LEVEL", "minimumDistanceAboveSurfaceInMeters")) %>% 
   mutate(dwc_best_match_iri = replace(dwc_best_match_iri, elter_term == "MIN_LEVEL", "http://rs.tdwg.org/dwc/terms/minimumDistanceAboveSurfaceInMeters")) %>%
-  rowid_to_column() %>% 
-  slice(40:50)
-  
-  
+  ## MINUTE ----
+  mutate(definition_quality = replace(definition_quality, elter_term == "MINUTE", "ok")) %>% 
+  mutate(mapping_possible = replace(mapping_possible, elter_term == "MINUTE", FALSE)) %>% 
+  mutate(dwc_mapping = replace(dwc_mapping, elter_term == "MINUTE", NA)) %>% 
+  mutate(dwc_best_match = replace(dwc_best_match, elter_term == "MINUTE", "eventTime")) %>% 
+  mutate(dwc_best_match_iri = replace(dwc_best_match_iri, elter_term == "MINUTE", "http://rs.tdwg.org/dwc/terms/eventTime")) %>%
+  ## MONTH ----
+  mutate(definition_quality = replace(definition_quality, elter_term == "MONTH", "ok")) %>% 
+  mutate(mapping_possible = replace(mapping_possible, elter_term == "MONTH", TRUE)) %>% 
+  mutate(dwc_mapping = replace(dwc_mapping, elter_term == "MONTH", "month")) %>% 
+  mutate(dwc_best_match = replace(dwc_best_match, elter_term == "MONTH", "month")) %>% 
+  mutate(dwc_best_match_iri = replace(dwc_best_match_iri, elter_term == "MONTH", "http://rs.tdwg.org/dwc/terms/month")) %>%
+  ## NAME ----
+  mutate(definition_quality = replace(definition_quality, elter_term == "NAME", "bad")) %>% 
+  mutate(mapping_possible = replace(mapping_possible, elter_term == "NAME", FALSE)) %>% 
+  mutate(dwc_mapping = replace(dwc_mapping, elter_term == "NAME", NA)) %>% 
+  mutate(dwc_best_match = replace(dwc_best_match, elter_term == "NAME", "scientificName")) %>% 
+  mutate(dwc_best_match_iri = replace(dwc_best_match_iri, elter_term == "NAME", "http://rs.tdwg.org/dwc/terms/scientificName")) %>%
+  ## northBoundingCoordinate ----
+  mutate(definition_quality = replace(definition_quality, elter_term == "northBoundingCoordinate", "ok")) %>% 
+  mutate(mapping_possible = replace(mapping_possible, elter_term == "northBoundingCoordinate", TRUE)) %>% 
+  mutate(dwc_mapping = replace(dwc_mapping, elter_term == "northBoundingCoordinate", "decimalLatitude")) %>% 
+  mutate(dwc_best_match = replace(dwc_best_match, elter_term == "northBoundingCoordinate", "decimalLatitude")) %>% 
+  mutate(dwc_best_match_iri = replace(dwc_best_match_iri, elter_term == "northBoundingCoordinate", "http://rs.tdwg.org/dwc/terms/decimalLatitude")) %>%
+  ## NOTES ----
+  mutate(definition_quality = replace(definition_quality, elter_term == "NOTES", "ok")) %>% 
+  mutate(mapping_possible = replace(mapping_possible, elter_term == "NOTES", TRUE)) %>% 
+  mutate(dwc_mapping = replace(dwc_mapping, elter_term == "NOTES", "fieldNotes")) %>% 
+  mutate(dwc_best_match = replace(dwc_best_match, elter_term == "NOTES", "fieldNotes")) %>% 
+  mutate(dwc_best_match_iri = replace(dwc_best_match_iri, elter_term == "NOTES", "http://rs.tdwg.org/dwc/terms/fieldNotes")) %>%
+  ## numberOfSampleUnit ----
+  mutate(definition_quality = replace(definition_quality, elter_term == "numberOfSampleUnit", "poor")) %>% 
+  mutate(mapping_possible = replace(mapping_possible, elter_term == "numberOfSampleUnit", FALSE)) %>% 
+  mutate(dwc_mapping = replace(dwc_mapping, elter_term == "numberOfSampleUnit", NA)) %>% 
+  mutate(dwc_best_match = replace(dwc_best_match, elter_term == "numberOfSampleUnit", "sampleSizeValue")) %>% 
+  mutate(dwc_best_match_iri = replace(dwc_best_match_iri, elter_term == "numberOfSampleUnit", "http://rs.tdwg.org/dwc/terms/sampleSizeValue")) %>%
+  ## OperationPeriodSince ----
+  mutate(definition_quality = replace(definition_quality, elter_term == "OperationPeriodSince", "ok")) %>% 
+  mutate(mapping_possible = replace(mapping_possible, elter_term == "OperationPeriodSince", FALSE)) %>% 
+  mutate(dwc_mapping = replace(dwc_mapping, elter_term == "OperationPeriodSince", NA)) %>% 
+  mutate(dwc_best_match = replace(dwc_best_match, elter_term == "OperationPeriodSince", "parentMeasurementID")) %>% 
+  mutate(dwc_best_match_iri = replace(dwc_best_match_iri, elter_term == "OperationPeriodSince", "http://rs.tdwg.org/dwc/terms/parentMeasurementID")) %>%
+  ## ORG_NAME ----
+  mutate(definition_quality = replace(definition_quality, elter_term == "ORG_NAME", "poor")) %>% 
+  mutate(mapping_possible = replace(mapping_possible, elter_term == "ORG_NAME", TRUE)) %>% 
+  mutate(dwc_mapping = replace(dwc_mapping, elter_term == "ORG_NAME", "ownerInstitutionCode")) %>% 
+  mutate(dwc_best_match = replace(dwc_best_match, elter_term == "ORG_NAME", "ownerInstitutionCode")) %>% 
+  mutate(dwc_best_match_iri = replace(dwc_best_match_iri, elter_term == "ORG_NAME", "http://rs.tdwg.org/dwc/terms/ownerInstitutionCode")) %>%
+  ## PARENT_EVENT_ID ----
+  mutate(definition_quality = replace(definition_quality, elter_term == "PARENT_EVENT_ID", "ok")) %>% 
+  mutate(mapping_possible = replace(mapping_possible, elter_term == "PARENT_EVENT_ID", TRUE)) %>% 
+  mutate(dwc_mapping = replace(dwc_mapping, elter_term == "PARENT_EVENT_ID", "parentEventID")) %>% 
+  mutate(dwc_best_match = replace(dwc_best_match, elter_term == "PARENT_EVENT_ID", "parentEventID")) %>% 
+  mutate(dwc_best_match_iri = replace(dwc_best_match_iri, elter_term == "PARENT_EVENT_ID", "http://rs.tdwg.org/dwc/terms/parentEventID")) %>%
+  ## PHYS_SAMPLE ----
+  mutate(definition_quality = replace(definition_quality, elter_term == "PHYS_SAMPLE", "poor")) %>% 
+  mutate(mapping_possible = replace(mapping_possible, elter_term == "PHYS_SAMPLE", FALSE)) %>% 
+  mutate(dwc_mapping = replace(dwc_mapping, elter_term == "PHYS_SAMPLE", NA)) %>% 
+  mutate(dwc_best_match = replace(dwc_best_match, elter_term == "PHYS_SAMPLE", "materialSampleID")) %>% 
+  mutate(dwc_best_match_iri = replace(dwc_best_match_iri, elter_term == "PHYS_SAMPLE", "http://rs.tdwg.org/dwc/terms/materialSampleID")) %>%
+  ## plotDimension ----
+  mutate(definition_quality = replace(definition_quality, elter_term == "plotDimension", "ok")) %>% 
+  mutate(mapping_possible = replace(mapping_possible, elter_term == "plotDimension", FALSE)) %>% 
+  mutate(dwc_mapping = replace(dwc_mapping, elter_term == "plotDimension", NA)) %>% 
+  mutate(dwc_best_match = replace(dwc_best_match, elter_term == "plotDimension", "pointRadiusSpatialFit")) %>% 
+  mutate(dwc_best_match_iri = replace(dwc_best_match_iri, elter_term == "plotDimension", "http://rs.tdwg.org/dwc/terms/pointRadiusSpatialFit")) %>%
+  ## PLOTSIZE ----
+  mutate(definition_quality = replace(definition_quality, elter_term == "PLOTSIZE", "ok")) %>% 
+  mutate(mapping_possible = replace(mapping_possible, elter_term == "PLOTSIZE", FALSE)) %>% 
+  mutate(dwc_mapping = replace(dwc_mapping, elter_term == "PLOTSIZE", NA)) %>% 
+  mutate(dwc_best_match = replace(dwc_best_match, elter_term == "PLOTSIZE", "sampleSizeValue")) %>% 
+  mutate(dwc_best_match_iri = replace(dwc_best_match_iri, elter_term == "PLOTSIZE", "http://rs.tdwg.org/dwc/terms/sampleSizeValue")) %>%
+  ## Potential_natural_vegetation ----
+  mutate(definition_quality = replace(definition_quality, elter_term == "Potential_natural_vegetation", "ok")) %>% 
+  mutate(mapping_possible = replace(mapping_possible, elter_term == "Potential_natural_vegetation", FALSE)) %>% 
+  mutate(dwc_mapping = replace(dwc_mapping, elter_term == "Potential_natural_vegetation", NA)) %>% 
+  mutate(dwc_best_match = replace(dwc_best_match, elter_term == "Potential_natural_vegetation", "habitat")) %>% 
+  mutate(dwc_best_match_iri = replace(dwc_best_match_iri, elter_term == "Potential_natural_vegetation", "http://rs.tdwg.org/dwc/terms/habitat")) %>%
+  ## SAMP_EFFORT ----
+  mutate(definition_quality = replace(definition_quality, elter_term == "SAMP_EFFORT", "ok")) %>% 
+  mutate(mapping_possible = replace(mapping_possible, elter_term == "SAMP_EFFORT", TRUE)) %>% 
+  mutate(dwc_mapping = replace(dwc_mapping, elter_term == "SAMP_EFFORT", "samplingEffort")) %>% 
+  mutate(dwc_best_match = replace(dwc_best_match, elter_term == "SAMP_EFFORT", "samplingEffort")) %>% 
+  mutate(dwc_best_match_iri = replace(dwc_best_match_iri, elter_term == "SAMP_EFFORT", "http://rs.tdwg.org/dwc/terms/samplingEffort")) %>%
+  ## SAMP_SIZE ----
+  mutate(definition_quality = replace(definition_quality, elter_term == "SAMP_SIZE", "ok")) %>% 
+  mutate(mapping_possible = replace(mapping_possible, elter_term == "SAMP_SIZE", TRUE)) %>% 
+  mutate(dwc_mapping = replace(dwc_mapping, elter_term == "SAMP_SIZE", "sampleSizeValue")) %>% 
+  mutate(dwc_best_match = replace(dwc_best_match, elter_term == "SAMP_SIZE", "sampleSizeValue")) %>% 
+  mutate(dwc_best_match_iri = replace(dwc_best_match_iri, elter_term == "SAMP_SIZE", "http://rs.tdwg.org/dwc/terms/sampleSizeValue")) %>%
+  ## SAMPLE_ID ----
+  mutate(definition_quality = replace(definition_quality, elter_term == "SAMPLE_ID", "poor")) %>% 
+  mutate(mapping_possible = replace(mapping_possible, elter_term == "SAMPLE_ID", FALSE)) %>% 
+  mutate(dwc_mapping = replace(dwc_mapping, elter_term == "SAMPLE_ID", NA)) %>% 
+  mutate(dwc_best_match = replace(dwc_best_match, elter_term == "SAMPLE_ID", "materialSampleID")) %>% 
+  mutate(dwc_best_match_iri = replace(dwc_best_match_iri, elter_term == "SAMPLE_ID", "http://rs.tdwg.org/dwc/terms/materialSampleID")) %>%
+  ## SAMPLING_DESIGN ----
+  mutate(definition_quality = replace(definition_quality, elter_term == "SAMPLING_DESIGN", "ok")) %>% 
+  mutate(mapping_possible = replace(mapping_possible, elter_term == "SAMPLING_DESIGN", FALSE)) %>% 
+  mutate(dwc_mapping = replace(dwc_mapping, elter_term == "SAMPLING_DESIGN", NA)) %>% 
+  mutate(dwc_best_match = replace(dwc_best_match, elter_term == "SAMPLING_DESIGN", "measurementMethod")) %>% 
+  mutate(dwc_best_match_iri = replace(dwc_best_match_iri, elter_term == "SAMPLING_DESIGN", "http://rs.tdwg.org/dwc/terms/measurementMethod")) %>%
+  ## SECOND ----
+  mutate(definition_quality = replace(definition_quality, elter_term == "SECOND", "ok")) %>% 
+  mutate(mapping_possible = replace(mapping_possible, elter_term == "SECOND", FALSE)) %>% 
+  mutate(dwc_mapping = replace(dwc_mapping, elter_term == "SECOND", NA)) %>% 
+  mutate(dwc_best_match = replace(dwc_best_match, elter_term == "SECOND", "eventTime")) %>% 
+  mutate(dwc_best_match_iri = replace(dwc_best_match_iri, elter_term == "SECOND", "http://rs.tdwg.org/dwc/terms/eventTime")) %>%
+  ## SITE_CODE ----
+  mutate(definition_quality = replace(definition_quality, elter_term == "SITE_CODE", "ok")) %>% 
+  mutate(mapping_possible = replace(mapping_possible, elter_term == "SITE_CODE", TRUE)) %>% 
+  mutate(dwc_mapping = replace(dwc_mapping, elter_term == "SITE_CODE", "locationID")) %>% 
+  mutate(dwc_best_match = replace(dwc_best_match, elter_term == "SITE_CODE", "locationID")) %>% 
+  mutate(dwc_best_match_iri = replace(dwc_best_match_iri, elter_term == "SITE_CODE", "http://rs.tdwg.org/dwc/terms/locationID")) %>%
+  ## SIZE ----
+  mutate(definition_quality = replace(definition_quality, elter_term == "SIZE", "ok")) %>% 
+  mutate(mapping_possible = replace(mapping_possible, elter_term == "SIZE", TRUE)) %>% 
+  mutate(dwc_mapping = replace(dwc_mapping, elter_term == "SIZE", "sampleSizeValue")) %>% 
+  mutate(dwc_best_match = replace(dwc_best_match, elter_term == "SIZE", "sampleSizeValue")) %>% 
+  mutate(dwc_best_match_iri = replace(dwc_best_match_iri, elter_term == "SIZE", "http://rs.tdwg.org/dwc/terms/sampleSizeValue")) %>%
+  ## SNAME ----
+  mutate(definition_quality = replace(definition_quality, elter_term == "SNAME", "poor")) %>% 
+  mutate(mapping_possible = replace(mapping_possible, elter_term == "SNAME", TRUE)) %>% 
+  mutate(dwc_mapping = replace(dwc_mapping, elter_term == "SNAME", "locality")) %>% 
+  mutate(dwc_best_match = replace(dwc_best_match, elter_term == "SNAME", "locality")) %>% 
+  mutate(dwc_best_match_iri = replace(dwc_best_match_iri, elter_term == "SNAME", "http://rs.tdwg.org/dwc/terms/locality")) %>%
+  ## SOIL_TYPE ----
+  mutate(definition_quality = replace(definition_quality, elter_term == "SOIL_TYPE", "ok")) %>% 
+  mutate(mapping_possible = replace(mapping_possible, elter_term == "SOIL_TYPE", FALSE)) %>% 
+  mutate(dwc_mapping = replace(dwc_mapping, elter_term == "SOIL_TYPE", NA)) %>% 
+  mutate(dwc_best_match = replace(dwc_best_match, elter_term == "SOIL_TYPE", "dynamicProperties")) %>% 
+  mutate(dwc_best_match_iri = replace(dwc_best_match_iri, elter_term == "SOIL_TYPE", "http://rs.tdwg.org/dwc/terms/dynamicProperties")) %>%
+  ## southBoundingCoordinate ----
+  mutate(definition_quality = replace(definition_quality, elter_term == "southBoundingCoordinate", "ok")) %>% 
+  mutate(mapping_possible = replace(mapping_possible, elter_term == "southBoundingCoordinate", TRUE)) %>% 
+  mutate(dwc_mapping = replace(dwc_mapping, elter_term == "southBoundingCoordinate", "decimalLatitude")) %>% 
+  mutate(dwc_best_match = replace(dwc_best_match, elter_term == "southBoundingCoordinate", "decimalLatitude")) %>% 
+  mutate(dwc_best_match_iri = replace(dwc_best_match_iri, elter_term == "southBoundingCoordinate", "http://rs.tdwg.org/dwc/terms/decimalLatitude")) %>%
+  ## SPOOL ----
+  mutate(definition_quality = replace(definition_quality, elter_term == "SPOOL", "ok")) %>% 
+  mutate(mapping_possible = replace(mapping_possible, elter_term == "SPOOL", FALSE)) %>% 
+  mutate(dwc_mapping = replace(dwc_mapping, elter_term == "SPOOL", NA)) %>% 
+  mutate(dwc_best_match = replace(dwc_best_match, elter_term == "SPOOL", "samplingEffort")) %>% 
+  mutate(dwc_best_match_iri = replace(dwc_best_match_iri, elter_term == "SPOOL", "http://rs.tdwg.org/dwc/terms/samplingEffort")) %>%
+  ## STATION_CODE ----
+  mutate(definition_quality = replace(definition_quality, elter_term == "STATION_CODE", "ok")) %>% 
+  mutate(mapping_possible = replace(mapping_possible, elter_term == "STATION_CODE", FALSE)) %>% 
+  mutate(dwc_mapping = replace(dwc_mapping, elter_term == "STATION_CODE", NA)) %>% 
+  mutate(dwc_best_match = replace(dwc_best_match, elter_term == "STATION_CODE", "locationID")) %>% 
+  mutate(dwc_best_match_iri = replace(dwc_best_match_iri, elter_term == "STATION_CODE", "http://rs.tdwg.org/dwc/terms/locationID")) %>%
+  ## STYPE ----
+  mutate(definition_quality = replace(definition_quality, elter_term == "STYPE", "poor")) %>% 
+  mutate(mapping_possible = replace(mapping_possible, elter_term == "STYPE", TRUE)) %>% 
+  mutate(dwc_mapping = replace(dwc_mapping, elter_term == "STYPE", "footprintWKT")) %>% 
+  mutate(dwc_best_match = replace(dwc_best_match, elter_term == "STYPE", "footprintWKT")) %>% 
+  mutate(dwc_best_match_iri = replace(dwc_best_match_iri, elter_term == "STYPE", "http://rs.tdwg.org/dwc/terms/footprintWKT")) %>%
+  ## SUBPROG ----
+  mutate(definition_quality = replace(definition_quality, elter_term == "SUBPROG", "ok")) %>% 
+  mutate(mapping_possible = replace(mapping_possible, elter_term == "SUBPROG", FALSE)) %>% 
+  mutate(dwc_mapping = replace(dwc_mapping, elter_term == "SUBPROG", NA)) %>% 
+  mutate(dwc_best_match = replace(dwc_best_match, elter_term == "SUBPROG", "collectionCode")) %>% 
+  mutate(dwc_best_match_iri = replace(dwc_best_match_iri, elter_term == "SUBPROG", "http://rs.tdwg.org/dwc/terms/collectionCode")) %>%
+  ## TAXA ----
+  mutate(definition_quality = replace(definition_quality, elter_term == "TAXA", "bad")) %>% 
+  mutate(mapping_possible = replace(mapping_possible, elter_term == "TAXA", FALSE)) %>% 
+  mutate(dwc_mapping = replace(dwc_mapping, elter_term == "TAXA", NA)) %>% 
+  mutate(dwc_best_match = replace(dwc_best_match, elter_term == "TAXA", "taxonID")) %>% 
+  mutate(dwc_best_match_iri = replace(dwc_best_match_iri, elter_term == "TAXA", "http://rs.tdwg.org/dwc/terms/taxonID")) %>%
+  ## TIME ----
+  mutate(definition_quality = replace(definition_quality, elter_term == "TIME", "poor")) %>% 
+  mutate(mapping_possible = replace(mapping_possible, elter_term == "TIME", TRUE)) %>% 
+  mutate(dwc_mapping = replace(dwc_mapping, elter_term == "TIME", "eventDate")) %>% 
+  mutate(dwc_best_match = replace(dwc_best_match, elter_term == "TIME", "eventDate")) %>% 
+  mutate(dwc_best_match_iri = replace(dwc_best_match_iri, elter_term == "TIME", "http://rs.tdwg.org/dwc/terms/eventDate")) %>%
+  ## TIME_FROM ----
+  mutate(definition_quality = replace(definition_quality, elter_term == "TIME_FROM", "poor")) %>% 
+  mutate(mapping_possible = replace(mapping_possible, elter_term == "TIME_FROM", FALSE)) %>% 
+  mutate(dwc_mapping = replace(dwc_mapping, elter_term == "TIME_FROM", NA)) %>% 
+  mutate(dwc_best_match = replace(dwc_best_match, elter_term == "TIME_FROM", "eventDate")) %>% 
+  mutate(dwc_best_match_iri = replace(dwc_best_match_iri, elter_term == "TIME_FROM", "http://rs.tdwg.org/dwc/terms/eventDate")) %>%
+  ## TIME_TO ----
+  mutate(definition_quality = replace(definition_quality, elter_term == "TIME_TO", "poor")) %>% 
+  mutate(mapping_possible = replace(mapping_possible, elter_term == "TIME_TO", FALSE)) %>% 
+  mutate(dwc_mapping = replace(dwc_mapping, elter_term == "TIME_TO", NA)) %>% 
+  mutate(dwc_best_match = replace(dwc_best_match, elter_term == "TIME_TO", "eventDate")) %>% 
+  mutate(dwc_best_match_iri = replace(dwc_best_match_iri, elter_term == "TIME_TO", "http://rs.tdwg.org/dwc/terms/eventDate")) %>%
+  ## TLEVEL ----
+  mutate(definition_quality = replace(definition_quality, elter_term == "TLEVEL", "poor")) %>% 
+  mutate(mapping_possible = replace(mapping_possible, elter_term == "TLEVEL", TRUE)) %>% 
+  mutate(dwc_mapping = replace(dwc_mapping, elter_term == "TLEVEL", "dataGeneralizations")) %>% 
+  mutate(dwc_best_match = replace(dwc_best_match, elter_term == "TLEVEL", "dataGeneralizations")) %>% 
+  mutate(dwc_best_match_iri = replace(dwc_best_match_iri, elter_term == "TLEVEL", "http://rs.tdwg.org/dwc/terms/dataGeneralizations")) %>%
+  ## TPOOL ----
+  mutate(definition_quality = replace(definition_quality, elter_term == "TPOOL", "poor")) %>% 
+  mutate(mapping_possible = replace(mapping_possible, elter_term == "TPOOL", TRUE)) %>% 
+  mutate(dwc_mapping = replace(dwc_mapping, elter_term == "TPOOL", "dataGeneralizations")) %>% 
+  mutate(dwc_best_match = replace(dwc_best_match, elter_term == "TPOOL", "dataGeneralizations")) %>% 
+  mutate(dwc_best_match_iri = replace(dwc_best_match_iri, elter_term == "TPOOL", "http://rs.tdwg.org/dwc/terms/dataGeneralizations")) %>%
+  ## UNIT ----
+  mutate(definition_quality = replace(definition_quality, elter_term == "UNIT", "bad")) %>% 
+  mutate(mapping_possible = replace(mapping_possible, elter_term == "UNIT", TRUE)) %>% 
+  mutate(dwc_mapping = replace(dwc_mapping, elter_term == "UNIT", "measurementUnit")) %>% 
+  mutate(dwc_best_match = replace(dwc_best_match, elter_term == "UNIT", "measurementUnit")) %>% 
+  mutate(dwc_best_match_iri = replace(dwc_best_match_iri, elter_term == "UNIT", "http://rs.tdwg.org/dwc/terms/measurementUnit")) %>%
+  ## VALUE ----
+  mutate(definition_quality = replace(definition_quality, elter_term == "VALUE", "ok")) %>% 
+  mutate(mapping_possible = replace(mapping_possible, elter_term == "VALUE", TRUE)) %>% 
+  mutate(dwc_mapping = replace(dwc_mapping, elter_term == "VALUE", "measurementValue")) %>% 
+  mutate(dwc_best_match = replace(dwc_best_match, elter_term == "VALUE", "measurementValue")) %>% 
+  mutate(dwc_best_match_iri = replace(dwc_best_match_iri, elter_term == "VALUE", "http://rs.tdwg.org/dwc/terms/measurementValue")) %>%
+  ## VARIABLE ----
+  mutate(definition_quality = replace(definition_quality, elter_term == "VARIABLE", "ok")) %>% 
+  mutate(mapping_possible = replace(mapping_possible, elter_term == "VARIABLE", TRUE)) %>% 
+  mutate(dwc_mapping = replace(dwc_mapping, elter_term == "VARIABLE", "measurementType")) %>% 
+  mutate(dwc_best_match = replace(dwc_best_match, elter_term == "VARIABLE", "measurementType")) %>% 
+  mutate(dwc_best_match_iri = replace(dwc_best_match_iri, elter_term == "VARIABLE", "http://rs.tdwg.org/dwc/terms/measurementType")) %>%
+  ## VERT_OFFSET ----
+  mutate(definition_quality = replace(definition_quality, elter_term == "VERT_OFFSET", "ok")) %>% 
+  mutate(mapping_possible = replace(mapping_possible, elter_term == "VERT_OFFSET", FALSE)) %>% 
+  mutate(dwc_mapping = replace(dwc_mapping, elter_term == "VERT_OFFSET", NA)) %>% 
+  mutate(dwc_best_match = replace(dwc_best_match, elter_term == "VERT_OFFSET", "minimumDistanceAboveSurfaceInMeters")) %>% 
+  mutate(dwc_best_match_iri = replace(dwc_best_match_iri, elter_term == "VERT_OFFSET", "http://rs.tdwg.org/dwc/terms/minimumDistanceAboveSurfaceInMeters")) %>% 
+  ## westBoundingCoordinate ----
+  mutate(definition_quality = replace(definition_quality, elter_term == "westBoundingCoordinate", "ok")) %>% 
+  mutate(mapping_possible = replace(mapping_possible, elter_term == "westBoundingCoordinate", TRUE)) %>% 
+  mutate(dwc_mapping = replace(dwc_mapping, elter_term == "westBoundingCoordinate", "decimalLongitude")) %>% 
+  mutate(dwc_best_match = replace(dwc_best_match, elter_term == "westBoundingCoordinate", "decimalLongitude")) %>% 
+  mutate(dwc_best_match_iri = replace(dwc_best_match_iri, elter_term == "westBoundingCoordinate", "http://rs.tdwg.org/dwc/terms/decimalLongitude")) %>% 
+  ## YEAR ----
+  mutate(definition_quality = replace(definition_quality, elter_term == "YEAR", "ok")) %>% 
+  mutate(mapping_possible = replace(mapping_possible, elter_term == "YEAR", TRUE)) %>% 
+  mutate(dwc_mapping = replace(dwc_mapping, elter_term == "YEAR", "year")) %>% 
+  mutate(dwc_best_match = replace(dwc_best_match, elter_term == "YEAR", "year")) %>% 
+  mutate(dwc_best_match_iri = replace(dwc_best_match_iri, elter_term == "YEAR", "http://rs.tdwg.org/dwc/terms/year"))
+
+curated_mapping  
+
+#TODO propose new elter term names
+#TODO classify the mapping following proper nomenclature. Maybe take a look at: https://mapping-commons.github.io/semantic-mapping-vocabulary/
   
   
 
