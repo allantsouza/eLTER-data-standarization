@@ -487,9 +487,93 @@ curated_mapping <- curated_sv %>%
   mutate(dwc_best_match = replace(dwc_best_match, elter_term == "YEAR", "year")) %>% 
   mutate(dwc_best_match_iri = replace(dwc_best_match_iri, elter_term == "YEAR", "http://rs.tdwg.org/dwc/terms/year"))
 
-curated_mapping  
+# Proposing new elter term names ----
+curated_mapping <- curated_mapping %>% 
+  rename(camelCase_term = new_elter_term) %>% 
+  mutate(proposed_elter_term = NA) %>% 
+  relocate(proposed_elter_term, .after = camelCase_term) %>% 
+  mutate(proposed_elter_term = replace(proposed_elter_term, elter_term == "ABS_POSITION", "absolutePosition")) %>% 
+  mutate(proposed_elter_term = replace(proposed_elter_term, elter_term == "AGG_METHOD", "aggregationMethod")) %>% 
+  mutate(proposed_elter_term = replace(proposed_elter_term, elter_term == "ALTITUDE", "altitude")) %>% 
+  mutate(proposed_elter_term = replace(proposed_elter_term, elter_term == "altitudeMax", "maximumAltitude")) %>% 
+  mutate(proposed_elter_term = replace(proposed_elter_term, elter_term == "altitudeMin", "minimumAltitude")) %>% 
+  mutate(proposed_elter_term = replace(proposed_elter_term, elter_term == "CODE", "code")) %>% 
+  mutate(proposed_elter_term = replace(proposed_elter_term, elter_term == "CODE_URL", "codeUrl")) %>% 
+  mutate(proposed_elter_term = replace(proposed_elter_term, elter_term == "COMMENT", "comment")) %>% 
+  mutate(proposed_elter_term = replace(proposed_elter_term, elter_term == "Country", "country")) %>% 
+  mutate(proposed_elter_term = replace(proposed_elter_term, elter_term == "DAY", "day")) %>% 
+  mutate(proposed_elter_term = replace(proposed_elter_term, elter_term == "DEFINITON", "definiton")) %>% 
+  mutate(proposed_elter_term = replace(proposed_elter_term, elter_term == "eastBoundingCoordinate", "eastBoundingCoordinate")) %>% 
+  mutate(proposed_elter_term = replace(proposed_elter_term, elter_term == "EUNIS_Habitat_Type", "eunisHabitatType")) %>% 
+  mutate(proposed_elter_term = replace(proposed_elter_term, elter_term == "EVENT_EFFORT", "eventEffort")) %>% 
+  mutate(proposed_elter_term = replace(proposed_elter_term, elter_term == "EVENT_ID", "eventId")) %>% 
+  mutate(proposed_elter_term = replace(proposed_elter_term, elter_term == "FIELD_METHOD", "fieldMethod")) %>% 
+  mutate(proposed_elter_term = replace(proposed_elter_term, elter_term == "FIELD_NAME", "fieldName")) %>% 
+  mutate(proposed_elter_term = replace(proposed_elter_term, elter_term == "FLAGQUA", "flagQuality")) %>% 
+  mutate(proposed_elter_term = replace(proposed_elter_term, elter_term == "FLAGSTA", "flagStatus")) %>% 
+  mutate(proposed_elter_term = replace(proposed_elter_term, elter_term == "GEOSPAT_FEATURE", "geoSpatialFeature")) %>% 
+  mutate(proposed_elter_term = replace(proposed_elter_term, elter_term == "HABITAT_TYPE", "habitatType")) %>% 
+  mutate(proposed_elter_term = replace(proposed_elter_term, elter_term == "HORI_OFFSET", "horizontalOffset")) %>% 
+  mutate(proposed_elter_term = replace(proposed_elter_term, elter_term == "HOUR", "hour")) %>% 
+  mutate(proposed_elter_term = replace(proposed_elter_term, elter_term == "InstHeight", "InstrumentHeight")) %>% 
+  mutate(proposed_elter_term = replace(proposed_elter_term, elter_term == "LAB_METHOD", "labMethod")) %>% 
+  mutate(proposed_elter_term = replace(proposed_elter_term, elter_term == "LAT", "decimalLatitude")) %>% 
+  mutate(proposed_elter_term = replace(proposed_elter_term, elter_term == "LAYER", "layer")) %>% 
+  mutate(proposed_elter_term = replace(proposed_elter_term, elter_term == "LIST_CODE", "listCode")) %>% 
+  mutate(proposed_elter_term = replace(proposed_elter_term, elter_term == "LISTMED", NA)) %>%
+  mutate(proposed_elter_term = replace(proposed_elter_term, elter_term == "LISTSUB", NA)) %>%
+  mutate(proposed_elter_term = replace(proposed_elter_term, elter_term == "LISTTAXA", NA)) %>%
+  mutate(proposed_elter_term = replace(proposed_elter_term, elter_term == "Local_Habitat_Type", "localHabitatType")) %>%
+  mutate(proposed_elter_term = replace(proposed_elter_term, elter_term == "LON", "decimalLongitude")) %>%
+  mutate(proposed_elter_term = replace(proposed_elter_term, elter_term == "MAX_LEVEL", "maximumLevel")) %>%
+  mutate(proposed_elter_term = replace(proposed_elter_term, elter_term == "MEDIUM", "medium")) %>%
+  mutate(proposed_elter_term = replace(proposed_elter_term, elter_term == "METH_DESCR", "methodDescription")) %>%
+  mutate(proposed_elter_term = replace(proposed_elter_term, elter_term == "MIN_LEVEL", "minimumLevel")) %>%
+  mutate(proposed_elter_term = replace(proposed_elter_term, elter_term == "MINUTE", "minute")) %>%
+  mutate(proposed_elter_term = replace(proposed_elter_term, elter_term == "MONTH", "month")) %>%
+  mutate(proposed_elter_term = replace(proposed_elter_term, elter_term == "NAME", "name")) %>%
+  mutate(proposed_elter_term = replace(proposed_elter_term, elter_term == "northBoundingCoordinate", "northBoundingCoordinate")) %>%
+  mutate(proposed_elter_term = replace(proposed_elter_term, elter_term == "NOTES", "notes")) %>%
+  mutate(proposed_elter_term = replace(proposed_elter_term, elter_term == "numberOfSampleUnit", "numberOfSampleUnit")) %>%
+  mutate(proposed_elter_term = replace(proposed_elter_term, elter_term == "OperationPeriodSince", "operationalSince")) %>%
+  mutate(proposed_elter_term = replace(proposed_elter_term, elter_term == "ORG_NAME", "organizationName")) %>%
+  mutate(proposed_elter_term = replace(proposed_elter_term, elter_term == "PARENT_EVENT_ID", "parentEventId")) %>%
+  mutate(proposed_elter_term = replace(proposed_elter_term, elter_term == "PHYS_SAMPLE", "physicalSample")) %>%
+  mutate(proposed_elter_term = replace(proposed_elter_term, elter_term == "plotDimension", "plotDimension")) %>%
+  mutate(proposed_elter_term = replace(proposed_elter_term, elter_term == "PLOTSIZE", "plotSize")) %>%
+  mutate(proposed_elter_term = replace(proposed_elter_term, elter_term == "Potential_natural_vegetation", "potentialNaturalVegetation")) %>%
+  mutate(proposed_elter_term = replace(proposed_elter_term, elter_term == "SAMP_EFFORT", "samplingEffort")) %>%
+  mutate(proposed_elter_term = replace(proposed_elter_term, elter_term == "SAMP_SIZE", "sampleSize")) %>%
+  mutate(proposed_elter_term = replace(proposed_elter_term, elter_term == "SAMPLE_ID", "sampleId")) %>%
+  mutate(proposed_elter_term = replace(proposed_elter_term, elter_term == "SAMPLING_DESIGN", "samplingDesign")) %>%
+  mutate(proposed_elter_term = replace(proposed_elter_term, elter_term == "SECOND", "second")) %>%
+  mutate(proposed_elter_term = replace(proposed_elter_term, elter_term == "SITE_CODE", "siteCode")) %>%
+  mutate(proposed_elter_term = replace(proposed_elter_term, elter_term == "SIZE", "size")) %>%
+  mutate(proposed_elter_term = replace(proposed_elter_term, elter_term == "SNAME", "siteName")) %>%
+  mutate(proposed_elter_term = replace(proposed_elter_term, elter_term == "SOIL_TYPE", "soilType")) %>%
+  mutate(proposed_elter_term = replace(proposed_elter_term, elter_term == "southBoundingCoordinate", "southBoundingCoordinate")) %>%
+  mutate(proposed_elter_term = replace(proposed_elter_term, elter_term == "SPOOL", "spatialPool")) %>%
+  mutate(proposed_elter_term = replace(proposed_elter_term, elter_term == "STATION_CODE", "stationCode")) %>%
+  mutate(proposed_elter_term = replace(proposed_elter_term, elter_term == "STYPE", "spatialType")) %>%
+  mutate(proposed_elter_term = replace(proposed_elter_term, elter_term == "SUBPROG", "subProgram")) %>%
+  mutate(proposed_elter_term = replace(proposed_elter_term, elter_term == "TAXA", "taxa")) %>%
+  mutate(proposed_elter_term = replace(proposed_elter_term, elter_term == "TIME", "time")) %>%
+  mutate(proposed_elter_term = replace(proposed_elter_term, elter_term == "TIME_FROM", "timeFrom")) %>%
+  mutate(proposed_elter_term = replace(proposed_elter_term, elter_term == "TIME_TO", "timeTo")) %>%
+  mutate(proposed_elter_term = replace(proposed_elter_term, elter_term == "TLEVEL", "temporalLevel")) %>%
+  mutate(proposed_elter_term = replace(proposed_elter_term, elter_term == "TPOOL", "temporalPool")) %>%
+  mutate(proposed_elter_term = replace(proposed_elter_term, elter_term == "UNIT", "unit")) %>%
+  mutate(proposed_elter_term = replace(proposed_elter_term, elter_term == "VALUE", "value")) %>%
+  mutate(proposed_elter_term = replace(proposed_elter_term, elter_term == "VARIABLE", "variable")) %>%
+  mutate(proposed_elter_term = replace(proposed_elter_term, elter_term == "VERT_OFFSET", "verticalOffset")) %>%
+  mutate(proposed_elter_term = replace(proposed_elter_term, elter_term == "westBoundingCoordinate", "westBoundingCoordinate")) %>%
+  mutate(proposed_elter_term = replace(proposed_elter_term, elter_term == "YEAR", "year"))
 
-#TODO propose new elter term names
+curated_mapping
+
+# exporting
+write_csv(x = curated_mapping, na = "", file = here::here("data", "data-outputs", "eLTER-DwC-curated-mapping_v01.csv"))
+
 #TODO classify the mapping following proper nomenclature. Maybe take a look at: https://mapping-commons.github.io/semantic-mapping-vocabulary/
   
   
