@@ -576,7 +576,63 @@ write_csv(x = curated_mapping, na = "", file = here::here("data", "data-outputs"
 
 #TODO classify the mapping following proper nomenclature. Maybe take a look at: https://mapping-commons.github.io/semantic-mapping-vocabulary/
   
+# some descriptive stats and visualizations ----
+p_mapping_viability <- curated_mapping %>% 
+  group_by(mapping_possible) %>% 
+  summarise(count = n()) %>% 
+  ggplot(aes(x = "", y = count, fill = mapping_possible)) +
+  coord_flip() +
+  geom_bar(position = "fill", stat = "identity") +
+  scale_fill_manual(values = c("#DA20DF","#25DF20")) +
+  scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
+  labs(title = "eLTER to DwC mapping", 
+       x = "Viability", y = "Terms", fill = "eLTER/DwC mapping") +
+  ggthemes::theme_solarized() +
+  theme(legend.position = "bottom", text = element_text(size = 14))
+
+ggsave(plot = p_mapping_viability, filename = here("images", "eLTER-IMAGE-mapping_viability.jpeg"), 
+       device = "jpeg", units = "cm", dpi = 300, width = 12, height = 9)  
+
+## descriptive stats - mapping viability  
+curated_mapping %>%
+  group_by(mapping_possible) %>% 
+  summarise(count = n()) %>% 
+  mutate(percent = (count/(40+55))*100)
+
+p_term_quality <- curated_mapping %>% 
+  mutate(definition_quality = as_factor(definition_quality)) %>% 
+  mutate(definition_quality = fct_relevel(definition_quality, "good", "ok", "poor", "bad")) %>% 
+  distinct(elter_term, definition_quality, mapping_possible) %>% 
+  group_by(definition_quality, mapping_possible) %>% 
+  tally() %>% 
+  ggplot(aes(x = mapping_possible, y = n, fill = definition_quality)) +
+  geom_bar(position = "fill", stat = "identity") +
+  coord_flip() +
+  scale_fill_viridis_d(option = "H") +
+  scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
+  labs(title = "eLTER terms definition assessment", x = "Mapping viability", y = "Terms", 
+       fill = "Definition quality") +
+  ggthemes::theme_solarized() +
+  theme(legend.position = "bottom", text = element_text(size = 14))
   
+ggsave(plot = p_term_quality, filename = here("images", "eLTER-IMAGE-eLTER_term_quality_assessment.jpeg"), 
+       device = "jpeg", units = "cm", dpi = 300, width = 15, height = 12)  
 
 
+curated_mapping %>% 
+  mutate(definition_quality = as_factor(definition_quality)) %>% 
+  mutate(definition_quality = fct_relevel(definition_quality, "good", "ok", "poor", "bad")) %>% 
+  distinct(elter_term, definition_quality, mapping_possible) %>% 
+  group_by(definition_quality) %>% 
+  tally() %>% 
+  mutate(percent = round((n/(76)*100), 1))
 
+
+curated_mapping %>% 
+  filter(definition_quality == "bad") %>% 
+  select(elter_term, proposed_elter_term, elter_definition, dwc_best_match) %>% 
+  filter(elter_term == "TAXA") %>% 
+  pull(elter_definition)
+
+curated_mapping %>% 
+  filter(mapping_possible == FALSE)
