@@ -46,9 +46,9 @@ write.xlsx(x = elter_variable_cases,
            file = here("data", "data-outputs", "eLTER-DATA-variable_case_styles.xlsx"))
 
 # dataviz
-elter_template %>% 
+p_case_styles <- elter_template %>% 
   clean_names() %>% 
-  select(table, field_name) %>% 
+  select(table, field_name) %>%
   mutate(case_style = detect_case_style(field_name)) %>% 
   group_by(case_style) %>% 
   tally() %>% 
@@ -56,9 +56,14 @@ elter_template %>%
   ggplot(aes(x = fct_reorder(case_style, n), y = n)) +
   coord_flip() +
   geom_col(fill = "orange", col = "black") +
-  labs(x = "Case style", y = "Number of variables") +
-  theme_bw() +
-  theme(text = element_text(size = 18))
+  labs(x = "Case style", y = "Number of terms", title = "eLTER terms styles") +
+  ggthemes::theme_solarized() +
+  theme(text = element_text(size = 14))
+
+p_case_styles
+
+ggsave(plot = p_case_styles, filename = here("images", "eLTER-IMAGE-terms_case_styles.jpeg"), 
+       device = "jpeg", units = "cm", dpi = 300, width = 12, height = 9)
 
 # standardizing case style ----
 ## custom function
