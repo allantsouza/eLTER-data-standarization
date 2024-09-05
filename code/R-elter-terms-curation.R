@@ -590,7 +590,28 @@ p_mapping_viability <- curated_mapping %>%
   ggthemes::theme_solarized() +
   theme(legend.position = "bottom", text = element_text(size = 14))
 
+p_mapping_viability
+
 ggsave(plot = p_mapping_viability, filename = here("images", "eLTER-IMAGE-mapping_viability.jpeg"), 
+       device = "jpeg", units = "cm", dpi = 300, width = 12, height = 9)  
+
+
+p_mapping_viability_partial <- curated_mapping %>% 
+  select(elter_term, mapping_possible, dwc_best_match) %>% 
+  mutate(partial_match = if_else(!is.na(dwc_best_match), true = TRUE, false = FALSE)) %>% 
+  group_by(partial_match) %>% 
+  summarise(count = n()) %>% 
+  ggplot(aes(x = "", y = count, fill = partial_match)) +
+  coord_flip() +
+  geom_bar(position = "fill", stat = "identity") +
+  scale_fill_manual(values = c("#25DF20")) +
+  scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
+  labs(title = "eLTER to DwC mapping", 
+       x = "Viability (partial match)", y = "Terms", fill = "eLTER/DwC mapping") +
+  ggthemes::theme_solarized() +
+  theme(legend.position = "bottom", text = element_text(size = 14))
+
+ggsave(plot = p_mapping_viability_partial, filename = here("images", "eLTER-IMAGE-mapping_viability_partial.jpeg"), 
        device = "jpeg", units = "cm", dpi = 300, width = 12, height = 9)  
 
 ## descriptive stats - mapping viability  
@@ -636,3 +657,46 @@ curated_mapping %>%
 
 curated_mapping %>% 
   filter(mapping_possible == FALSE)
+
+
+# comparing the predictions with the curated version
+model_selections <- left_join(
+  curated_sv %>% 
+    select(elter_term, similarity, dwc_term) %>% 
+    group_by(elter_term) %>%
+    summarise(best = max(pick(similarity))) %>% 
+    rename(similarity = best),
+  curated_sv %>% 
+    select(elter_term, dwc_term, similarity)
+  ) %>% 
+  distinct()
+
+p_model_efficiency <- full_join(model_selections %>% 
+            rename(model_dwc = dwc_term) %>% 
+            select(-similarity),
+          curated_mapping %>% 
+            select(elter_term, dwc_mapping, dwc_best_match)
+          ) %>% 
+  mutate(model_picked = case_when(model_dwc == dwc_mapping ~ "model (full match)",
+                                  model_dwc == dwc_best_match ~ "model (partial match)",
+                                  !model_dwc == dwc_mapping | !model_dwc == dwc_best_match ~ "manual")) %>% 
+  group_by(model_picked) %>% 
+  tally() %>% 
+  mutate(n_percent = round(n/(67+23+5)*100, 1)) %>% 
+  mutate(model_picked = as_factor(model_picked)) %>% 
+  mutate(model_picked = fct_relevel(model_picked, "model (full match)", "model (partial match)", "manual")) %>% 
+  ggplot(aes(x = "", y = n, fill = model_picked)) +
+  geom_bar(position = "fill", stat = "identity") +
+  coord_flip() +
+  scale_fill_viridis_d(option = "H") +
+  scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
+  labs(title = "eLTER terms mapping assessment", x = "Mapping source", y = "Terms", 
+       fill = "Mapping source") +
+  ggthemes::theme_solarized() +
+  theme(legend.position = "bottom", text = element_text(size = 14))
+
+p_model_efficiency
+
+ggsave(plot = p_model_efficiency, filename = here("images", "eLTER-IMAGE-eLTER_term_mapping_efficiency.jpeg"), 
+       device = "jpeg", units = "cm", dpi = 300, width = 18, height = 15)  
+
